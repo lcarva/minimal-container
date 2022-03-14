@@ -1,0 +1,4 @@
+So in the future, one 'client' at a time or you'll be spending CPU time with
+lots of little 'child processes'.
+	-- Kevin M. Bealer, commenting on the private life of a Linux nerd
+
