@@ -5,7 +5,7 @@
     {
       "name": "image-registry.openshift-image-registry.svc:5000/minimal-container/min",
       "digest": {
-        "sha256": "0aeae91041748bc5211868907897c37f8a6459e62f060757b9a8de90fc77a6ff"
+        "sha256": "979cbadd83eecfd56c9b9533e12b3ccd39445469aa4cd2e81f620e114ae37554"
       }
     }
   ],
@@ -30,8 +30,8 @@
             "name": "git-clone",
             "kind": "Task"
           },
-          "startedOn": "2022-05-18T18:05:51Z",
-          "finishedOn": "2022-05-18T18:06:02Z",
+          "startedOn": "2022-05-18T19:47:49Z",
+          "finishedOn": "2022-05-18T19:48:06Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -63,7 +63,17 @@
               "userHome": "\"/tekton/home\"",
               "verbose": "\"true\""
             }
-          }
+          },
+          "results": [
+            {
+              "name": "commit",
+              "value": "a5bdfa264ac87bb2bec104ef9ddf2207b5b210c9"
+            },
+            {
+              "name": "url",
+              "value": "https://github.com/lcarva/minimal-container"
+            }
+          ]
         },
         {
           "name": "security-scan",
@@ -74,8 +84,8 @@
             "name": "trivy-scanner",
             "kind": "Task"
           },
-          "startedOn": "2022-05-18T18:06:02Z",
-          "finishedOn": "2022-05-18T18:06:14Z",
+          "startedOn": "2022-05-18T19:48:06Z",
+          "finishedOn": "2022-05-18T19:48:18Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -108,8 +118,8 @@
             "name": "buildah",
             "kind": "ClusterTask"
           },
-          "startedOn": "2022-05-18T18:06:14Z",
-          "finishedOn": "2022-05-18T18:06:25Z",
+          "startedOn": "2022-05-18T19:48:19Z",
+          "finishedOn": "2022-05-18T19:48:29Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -154,13 +164,23 @@
               "STORAGE_DRIVER": "\"vfs\"",
               "TLSVERIFY": "\"true\""
             }
-          }
+          },
+          "results": [
+            {
+              "name": "IMAGE_DIGEST",
+              "value": "sha256:979cbadd83eecfd56c9b9533e12b3ccd39445469aa4cd2e81f620e114ae37554"
+            },
+            {
+              "name": "IMAGE_URL",
+              "value": "image-registry.openshift-image-registry.svc:5000/minimal-container/min:latest\n"
+            }
+          ]
         }
       ]
     },
     "metadata": {
-      "buildStartedOn": "2022-05-18T18:05:51Z",
-      "buildFinishedOn": "2022-05-18T18:06:26Z",
+      "buildStartedOn": "2022-05-18T19:47:49Z",
+      "buildFinishedOn": "2022-05-18T19:48:30Z",
       "completeness": {
         "parameters": false,
         "environment": false,
