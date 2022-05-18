@@ -1,0 +1,76 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  annotations:
+  name: simple-build
+spec:
+  params:
+  - description: Repository URL to clone from.
+    name: git-repo
+    type: string
+  - default: main
+    description: Revision to checkout. (branch, tag, sha, ref, etc...)
+    name: git-revision
+    type: string
+  - description: Reference of the image the pipeline will produce.
+    name: output-image
+    type: string
+  results:
+  - description: Reference of the image the pipeline will produce.
+    name: IMAGE_URL
+    value: $(tasks.image-build.results.IMAGE_URL)
+  - description: Digest of the image the pipeline will produce.
+    name: IMAGE_DIGEST
+    value: $(tasks.image-build.results.IMAGE_DIGEST)
+  - description: Repository URL used for buiding the image.
+    name: CHAINS-GIT_URL
+    value: $(tasks.git-clone.results.url)
+  - description: Repository commit used for building the image.
+    name: CHAINS-GIT_COMMIT
+    value: $(tasks.git-clone.results.commit)
+  tasks:
+  - name: git-clone
+    taskRef:
+      kind: Task
+      name: git-clone
+    params:
+    - name: url
+      value: $(params.git-repo)
+    - name: revision
+      value: $(params.git-revision)
+    workspaces:
+    - name: output
+      workspace: shared
+  - name: security-scan
+    runAfter:
+    - git-clone
+    taskRef:
+      kind: Task
+      name: trivy-scanner
+    params:
+    - name: ARGS
+      value:
+      - filesystem
+    - name: IMAGE_PATH
+      value: "."
+    workspaces:
+    - name: manifest-dir
+      workspace: shared
+  - name: image-build
+    runAfter:
+    - security-scan
+    taskRef:
+      kind: ClusterTask
+      name: buildah
+    params:
+    - name: IMAGE
+      value: $(params.output-image)
+    # TODO: Maybe change this in the task def directly or via kustomize
+    - name: STORAGE_DRIVER
+      value: vfs
+    workspaces:
+    - name: source
+      workspace: shared
+  workspaces:
+  - name: shared
