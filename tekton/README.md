@@ -25,6 +25,15 @@ tkn -n minimal-container pipeline start simple-build \
   --param output-image=image-registry.openshift-image-registry.svc:5000/minimal-container/min:latest \
   --workspace name=shared,pvc,claimName="tekton-build" \
   --showlog
+
+# An event listener is also setup. To invoke it, first grab the URL.
+EL_URL="$(oc get route build-event-listener -o json | jq '.spec.host' -r)"
+
+# Then simply make a POST request with your favorite client, e.g. curl.
+# See tekton/examples/event-listener-payload.json for a sample payload.
+curl -X POST -H "Content-Type: application/json" \
+    -d @tekton/examples/event-listener-payload.json \
+    "http://${EL_URL}"
 ```
 
 That's it!

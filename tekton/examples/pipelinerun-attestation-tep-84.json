@@ -5,7 +5,7 @@
     {
       "name": "image-registry.openshift-image-registry.svc:5000/minimal-container/min",
       "digest": {
-        "sha256": "979cbadd83eecfd56c9b9533e12b3ccd39445469aa4cd2e81f620e114ae37554"
+        "sha256": "657b6d7f798ce78b1d31fd0ce2322d2a832312259dcb00998da1e5a8eb55a292"
       }
     }
   ],
@@ -30,8 +30,8 @@
             "name": "git-clone",
             "kind": "Task"
           },
-          "startedOn": "2022-05-18T19:47:49Z",
-          "finishedOn": "2022-05-18T19:48:06Z",
+          "startedOn": "2022-05-19T17:44:27Z",
+          "finishedOn": "2022-05-19T17:44:38Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -84,8 +84,8 @@
             "name": "trivy-scanner",
             "kind": "Task"
           },
-          "startedOn": "2022-05-18T19:48:06Z",
-          "finishedOn": "2022-05-18T19:48:18Z",
+          "startedOn": "2022-05-19T17:44:38Z",
+          "finishedOn": "2022-05-19T17:44:51Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -118,8 +118,8 @@
             "name": "buildah",
             "kind": "ClusterTask"
           },
-          "startedOn": "2022-05-18T19:48:19Z",
-          "finishedOn": "2022-05-18T19:48:29Z",
+          "startedOn": "2022-05-19T17:44:51Z",
+          "finishedOn": "2022-05-19T17:45:02Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -168,7 +168,7 @@
           "results": [
             {
               "name": "IMAGE_DIGEST",
-              "value": "sha256:979cbadd83eecfd56c9b9533e12b3ccd39445469aa4cd2e81f620e114ae37554"
+              "value": "sha256:657b6d7f798ce78b1d31fd0ce2322d2a832312259dcb00998da1e5a8eb55a292"
             },
             {
               "name": "IMAGE_URL",
@@ -179,8 +179,8 @@
       ]
     },
     "metadata": {
-      "buildStartedOn": "2022-05-18T19:47:49Z",
-      "buildFinishedOn": "2022-05-18T19:48:30Z",
+      "buildStartedOn": "2022-05-19T17:44:27Z",
+      "buildFinishedOn": "2022-05-19T17:45:02Z",
       "completeness": {
         "parameters": false,
         "environment": false,

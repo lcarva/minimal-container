@@ -1,0 +1,10 @@
+{
+  "repository": {
+    "url": "https://github.com/lcarva/minimal-container",
+    "name": "minimal-container"
+  },
+  "head_commit": {
+    "id": "a5bdfa264ac87bb2bec104ef9ddf2207b5b210c9"
+  },
+  "dest_oci_repo": "image-registry.openshift-image-registry.svc:5000/minimal-container/min"
+}
