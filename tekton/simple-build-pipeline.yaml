@@ -42,7 +42,7 @@ spec:
     workspaces:
     - name: output
       workspace: shared
-  - name: security-scan
+  - name: source-security-scan
     runAfter:
     - git-clone
     taskRef:
@@ -59,7 +59,7 @@ spec:
       workspace: shared
   - name: image-build
     runAfter:
-    - security-scan
+    - source-security-scan
     taskRef:
       kind: ClusterTask
       name: buildah
@@ -71,6 +71,19 @@ spec:
       value: vfs
     workspaces:
     - name: source
+      workspace: shared
+  - name: image-security-scan
+    taskRef:
+      kind: Task
+      name: trivy-scanner
+    params:
+    - name: ARGS
+      value:
+      - image
+    - name: IMAGE_PATH
+      value: $(tasks.image-build.results.IMAGE_URL)
+    workspaces:
+    - name: manifest-dir
       workspace: shared
   workspaces:
   - name: shared
