@@ -5,7 +5,7 @@
     {
       "name": "image-registry.openshift-image-registry.svc:5000/minimal-container/min",
       "digest": {
-        "sha256": "657b6d7f798ce78b1d31fd0ce2322d2a832312259dcb00998da1e5a8eb55a292"
+        "sha256": "52af519cd2cb835e77f971ab303a8ae1c3b9b04fe2aa604d1c50d8d73f110304"
       }
     }
   ],
@@ -30,8 +30,8 @@
             "name": "git-clone",
             "kind": "Task"
           },
-          "startedOn": "2022-05-19T17:44:27Z",
-          "finishedOn": "2022-05-19T17:44:38Z",
+          "startedOn": "2022-07-06T17:17:13Z",
+          "finishedOn": "2022-07-06T17:17:21Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -76,16 +76,17 @@
           ]
         },
         {
-          "name": "security-scan",
+          "name": "source-security-scan",
           "after": [
             "git-clone"
           ],
           "ref": {
             "name": "trivy-scanner",
-            "kind": "Task"
+            "kind": "Task",
+            "bundle": "gcr.io/tekton-releases/catalog/upstream/trivy-scanner:0.1"
           },
-          "startedOn": "2022-05-19T17:44:38Z",
-          "finishedOn": "2022-05-19T17:44:51Z",
+          "startedOn": "2022-07-06T17:17:22Z",
+          "finishedOn": "2022-07-06T17:17:32Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -112,14 +113,14 @@
         {
           "name": "image-build",
           "after": [
-            "security-scan"
+            "source-security-scan"
           ],
           "ref": {
             "name": "buildah",
             "kind": "ClusterTask"
           },
-          "startedOn": "2022-05-19T17:44:51Z",
-          "finishedOn": "2022-05-19T17:45:02Z",
+          "startedOn": "2022-07-06T17:17:32Z",
+          "finishedOn": "2022-07-06T17:17:43Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -168,19 +169,51 @@
           "results": [
             {
               "name": "IMAGE_DIGEST",
-              "value": "sha256:657b6d7f798ce78b1d31fd0ce2322d2a832312259dcb00998da1e5a8eb55a292"
+              "value": "sha256:52af519cd2cb835e77f971ab303a8ae1c3b9b04fe2aa604d1c50d8d73f110304"
             },
             {
               "name": "IMAGE_URL",
               "value": "image-registry.openshift-image-registry.svc:5000/minimal-container/min:latest\n"
             }
           ]
+        },
+        {
+          "name": "image-security-scan",
+          "ref": {
+            "name": "trivy-scanner",
+            "kind": "Task",
+            "bundle": "gcr.io/tekton-releases/catalog/upstream/trivy-scanner@sha256:e4c2916f25ce2d42ec7016c3dc3392e527442c307f43aae3ea63f4622ee5cfe4"
+          },
+          "startedOn": "2022-07-06T17:17:43Z",
+          "finishedOn": "2022-07-06T17:17:55Z",
+          "status": "Succeeded",
+          "steps": [
+            {
+              "entryPoint": "#!/usr/bin/env sh\n  cmd=\"trivy $* $(params.IMAGE_PATH)\"\n  echo \"Running trivy task with command below\"\n  echo \"$cmd\"\n  eval \"$cmd\"\n",
+              "arguments": [
+                "$(params.ARGS)"
+              ],
+              "environment": {
+                "container": "trivy-scan",
+                "image": "docker.io/aquasec/trivy@sha256:dea76d4b50c75125cada676a87ac23de2b7ba4374752c6f908253c3b839201d9"
+              },
+              "annotations": null
+            }
+          ],
+          "invocation": {
+            "configSource": {},
+            "parameters": {
+              "ARGS": "[\"image\"]",
+              "IMAGE_PATH": "\"$(tasks.image-build.results.IMAGE_URL)\"",
+              "TRIVY_IMAGE": "\"docker.io/aquasec/trivy@sha256:dea76d4b50c75125cada676a87ac23de2b7ba4374752c6f908253c3b839201d9\""
+            }
+          }
         }
       ]
     },
     "metadata": {
-      "buildStartedOn": "2022-05-19T17:44:27Z",
-      "buildFinishedOn": "2022-05-19T17:45:02Z",
+      "buildStartedOn": "2022-07-06T17:17:12Z",
+      "buildFinishedOn": "2022-07-06T17:17:55Z",
       "completeness": {
         "parameters": false,
         "environment": false,

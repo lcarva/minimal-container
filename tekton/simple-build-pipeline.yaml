@@ -46,8 +46,8 @@ spec:
     runAfter:
     - git-clone
     taskRef:
-      kind: Task
       name: trivy-scanner
+      bundle: gcr.io/tekton-releases/catalog/upstream/trivy-scanner:0.1
     params:
     - name: ARGS
       value:
@@ -74,8 +74,8 @@ spec:
       workspace: shared
   - name: image-security-scan
     taskRef:
-      kind: Task
       name: trivy-scanner
+      bundle: gcr.io/tekton-releases/catalog/upstream/trivy-scanner@sha256:e4c2916f25ce2d42ec7016c3dc3392e527442c307f43aae3ea63f4622ee5cfe4
     params:
     - name: ARGS
       value:
