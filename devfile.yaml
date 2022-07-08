@@ -1,0 +1,7 @@
+schemaVersion: 2.0.0
+metadata:
+  name: minimal-container
+  version: 1.0.0
+  attributes:
+    # alpha.build-context: .
+    alpha.build-dockerfile: Dockerfile
