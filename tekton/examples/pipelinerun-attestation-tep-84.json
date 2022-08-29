@@ -5,7 +5,7 @@
     {
       "name": "image-registry.openshift-image-registry.svc:5000/minimal-container/min",
       "digest": {
-        "sha256": "52af519cd2cb835e77f971ab303a8ae1c3b9b04fe2aa604d1c50d8d73f110304"
+        "sha256": "41a8ace7b880ae40708daa60387d2f181c41ecec667c93010294d1529d58c27e"
       }
     }
   ],
@@ -17,9 +17,9 @@
     "invocation": {
       "configSource": {},
       "parameters": {
-        "git-repo": "\"https://github.com/lcarva/minimal-container\"",
-        "git-revision": "\"main\"",
-        "output-image": "\"image-registry.openshift-image-registry.svc:5000/minimal-container/min:latest\""
+        "git-repo": "https://github.com/lcarva/minimal-container",
+        "git-revision": "main",
+        "output-image": "image-registry.openshift-image-registry.svc:5000/minimal-container/min:latest"
       }
     },
     "buildConfig": {
@@ -30,8 +30,8 @@
             "name": "git-clone",
             "kind": "Task"
           },
-          "startedOn": "2022-07-06T17:17:13Z",
-          "finishedOn": "2022-07-06T17:17:21Z",
+          "startedOn": "2022-08-29T18:42:04Z",
+          "finishedOn": "2022-08-29T18:42:23Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -47,27 +47,27 @@
           "invocation": {
             "configSource": {},
             "parameters": {
-              "deleteExisting": "\"true\"",
-              "depth": "\"1\"",
-              "gitInitImage": "\"gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.29.0\"",
-              "httpProxy": "\"\"",
-              "httpsProxy": "\"\"",
-              "noProxy": "\"\"",
-              "refspec": "\"\"",
-              "revision": "\"$(params.git-revision)\"",
-              "sparseCheckoutDirectories": "\"\"",
-              "sslVerify": "\"true\"",
-              "subdirectory": "\"\"",
-              "submodules": "\"true\"",
-              "url": "\"$(params.git-repo)\"",
-              "userHome": "\"/tekton/home\"",
-              "verbose": "\"true\""
+              "deleteExisting": "true",
+              "depth": "1",
+              "gitInitImage": "gcr.io/tekton-releases/github.com/tektoncd/pipeline/cmd/git-init:v0.29.0",
+              "httpProxy": "",
+              "httpsProxy": "",
+              "noProxy": "",
+              "refspec": "",
+              "revision": "main",
+              "sparseCheckoutDirectories": "",
+              "sslVerify": "true",
+              "subdirectory": "",
+              "submodules": "true",
+              "url": "https://github.com/lcarva/minimal-container",
+              "userHome": "/tekton/home",
+              "verbose": "true"
             }
           },
           "results": [
             {
               "name": "commit",
-              "value": "a5bdfa264ac87bb2bec104ef9ddf2207b5b210c9"
+              "value": "89dedecaca1b85346600c7db9939a4fe090a42ef"
             },
             {
               "name": "url",
@@ -85,8 +85,8 @@
             "kind": "Task",
             "bundle": "gcr.io/tekton-releases/catalog/upstream/trivy-scanner:0.1"
           },
-          "startedOn": "2022-07-06T17:17:22Z",
-          "finishedOn": "2022-07-06T17:17:32Z",
+          "startedOn": "2022-08-29T18:42:24Z",
+          "finishedOn": "2022-08-29T18:42:40Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -104,9 +104,11 @@
           "invocation": {
             "configSource": {},
             "parameters": {
-              "ARGS": "[\"filesystem\"]",
-              "IMAGE_PATH": "\".\"",
-              "TRIVY_IMAGE": "\"docker.io/aquasec/trivy@sha256:dea76d4b50c75125cada676a87ac23de2b7ba4374752c6f908253c3b839201d9\""
+              "ARGS": [
+                "filesystem"
+              ],
+              "IMAGE_PATH": ".",
+              "TRIVY_IMAGE": "docker.io/aquasec/trivy@sha256:dea76d4b50c75125cada676a87ac23de2b7ba4374752c6f908253c3b839201d9"
             }
           }
         },
@@ -119,8 +121,8 @@
             "name": "buildah",
             "kind": "ClusterTask"
           },
-          "startedOn": "2022-07-06T17:17:32Z",
-          "finishedOn": "2022-07-06T17:17:43Z",
+          "startedOn": "2022-08-29T18:42:41Z",
+          "finishedOn": "2022-08-29T18:43:03Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -154,22 +156,22 @@
           "invocation": {
             "configSource": {},
             "parameters": {
-              "BUILDER_IMAGE": "\"quay.io/buildah/stable:v1.18.0\"",
-              "BUILD_EXTRA_ARGS": "\"\"",
-              "CONTEXT": "\".\"",
-              "DOCKERFILE": "\"./Dockerfile\"",
-              "FORMAT": "\"oci\"",
-              "IMAGE": "\"$(params.output-image)\"",
-              "PUSH_EXTRA_ARGS": "\"\"",
-              "SKIP_PUSH": "\"false\"",
-              "STORAGE_DRIVER": "\"vfs\"",
-              "TLSVERIFY": "\"true\""
+              "BUILDER_IMAGE": "quay.io/buildah/stable:v1.18.0",
+              "BUILD_EXTRA_ARGS": "",
+              "CONTEXT": ".",
+              "DOCKERFILE": "./Dockerfile",
+              "FORMAT": "oci",
+              "IMAGE": "image-registry.openshift-image-registry.svc:5000/minimal-container/min:latest",
+              "PUSH_EXTRA_ARGS": "",
+              "SKIP_PUSH": "false",
+              "STORAGE_DRIVER": "vfs",
+              "TLSVERIFY": "true"
             }
           },
           "results": [
             {
               "name": "IMAGE_DIGEST",
-              "value": "sha256:52af519cd2cb835e77f971ab303a8ae1c3b9b04fe2aa604d1c50d8d73f110304"
+              "value": "sha256:41a8ace7b880ae40708daa60387d2f181c41ecec667c93010294d1529d58c27e"
             },
             {
               "name": "IMAGE_URL",
@@ -179,13 +181,16 @@
         },
         {
           "name": "image-security-scan",
+          "after": [
+            "image-build"
+          ],
           "ref": {
             "name": "trivy-scanner",
             "kind": "Task",
             "bundle": "gcr.io/tekton-releases/catalog/upstream/trivy-scanner@sha256:e4c2916f25ce2d42ec7016c3dc3392e527442c307f43aae3ea63f4622ee5cfe4"
           },
-          "startedOn": "2022-07-06T17:17:43Z",
-          "finishedOn": "2022-07-06T17:17:55Z",
+          "startedOn": "2022-08-29T18:43:03Z",
+          "finishedOn": "2022-08-29T18:43:14Z",
           "status": "Succeeded",
           "steps": [
             {
@@ -203,17 +208,19 @@
           "invocation": {
             "configSource": {},
             "parameters": {
-              "ARGS": "[\"image\"]",
-              "IMAGE_PATH": "\"$(tasks.image-build.results.IMAGE_URL)\"",
-              "TRIVY_IMAGE": "\"docker.io/aquasec/trivy@sha256:dea76d4b50c75125cada676a87ac23de2b7ba4374752c6f908253c3b839201d9\""
+              "ARGS": [
+                "image"
+              ],
+              "IMAGE_PATH": "image-registry.openshift-image-registry.svc:5000/minimal-container/min:latest\n",
+              "TRIVY_IMAGE": "docker.io/aquasec/trivy@sha256:dea76d4b50c75125cada676a87ac23de2b7ba4374752c6f908253c3b839201d9"
             }
           }
         }
       ]
     },
     "metadata": {
-      "buildStartedOn": "2022-07-06T17:17:12Z",
-      "buildFinishedOn": "2022-07-06T17:17:55Z",
+      "buildStartedOn": "2022-08-29T18:42:04Z",
+      "buildFinishedOn": "2022-08-29T18:43:14Z",
       "completeness": {
         "parameters": false,
         "environment": false,
@@ -225,7 +232,7 @@
       {
         "uri": "git+https://github.com/lcarva/minimal-container.git",
         "digest": {
-          "sha1": "a5bdfa264ac87bb2bec104ef9ddf2207b5b210c9"
+          "sha1": "89dedecaca1b85346600c7db9939a4fe090a42ef"
         }
       }
     ]
