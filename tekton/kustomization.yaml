@@ -5,4 +5,3 @@ resources:
 - buildah-task.yaml
 - simple-build-pipeline.yaml
 - build-pvc.yaml
-- build-event-listener.yaml
