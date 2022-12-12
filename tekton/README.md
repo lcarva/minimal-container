@@ -27,7 +27,7 @@ tkn -n minimal-container pipeline start simple-build \
   --showlog
 ```
 
-It is also possible to create a Tekton Pipeline via an Even Listener:
+It is also possible to create a Tekton Pipeline via an Event Listener (require OpenShift 4):
 
 ```
 # Set up an event listener.
