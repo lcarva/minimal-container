@@ -1,4 +1,4 @@
-# Tekton Pipelines Example
+# Tekton Pipelines
 
 This directory holds various Tekton Pipelines resources that are meant to illustrate how to build a
 container image via Tekton Pipelines.
