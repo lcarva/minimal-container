@@ -72,6 +72,8 @@ spec:
     description: Digest of the image just built.
   - name: IMAGE_URL
     description: Image repository where the built image would be pushed to
+  - name: IMAGE_SBOM_URL
+    description: Image repository where the unsigned SBOM image would be pushed to
   steps:
   - name: build
     image: $(params.BUILDER_IMAGE)
@@ -89,14 +91,39 @@ spec:
         --digestfile /tmp/image-digest $(params.IMAGE) \
         docker://$(params.IMAGE)
       cat /tmp/image-digest | tee $(results.IMAGE_DIGEST.path)
-      echo "$(params.IMAGE)" | tee $(results.IMAGE_URL.path)
+      echo -n "$(params.IMAGE)" | tee $(results.IMAGE_URL.path)
+      echo -n "$(params.IMAGE)"
     securityContext:
       capabilities:
         add:
         - SETFCAP
-    volumeMounts:
-    - name: varlibcontainers
-      mountPath: /var/lib/containers
+  - name: make-sbom
+    image: quay.io/redhat-appstudio/syft:v0.47.0
+    workingDir: $(workspaces.source.path)
+    script: |
+      ref="$(params.IMAGE)@$(cat $(results.IMAGE_DIGEST.path))"
+      echo "binary image ref is ${ref}"
+      syft "${ref}" --output=cyclonedx-json --file=sbom.json
+      cat sbom.json
+  - name: attach-sbom
+    image: quay.io/redhat-appstudio/cosign:v1.13.1
+    workingDir: $(workspaces.source.path)
+    args:
+      - attach
+      - sbom
+      - --sbom
+      - sbom.json
+      - --type
+      - cyclonedx
+      - $(params.IMAGE)
+  - name: emit-sbom-result
+    image: $(params.BUILDER_IMAGE)
+    workingDir: $(workspaces.source.path)
+    script: |
+      set -x
+      repo="$(echo -n $(params.IMAGE) | sed 's/:.*$//')"
+      digest="$(cat $(results.IMAGE_DIGEST.path) | sed 's/:/-/')"
+      echo -n "${repo}:${digest}.sbom" | tee $(results.IMAGE_SBOM_URL.path)
   volumes:
   - name: varlibcontainers
     emptyDir: {}
