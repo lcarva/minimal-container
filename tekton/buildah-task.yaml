@@ -104,7 +104,6 @@ spec:
       ref="$(params.IMAGE)@$(cat $(results.IMAGE_DIGEST.path))"
       echo "binary image ref is ${ref}"
       syft "${ref}" --output=cyclonedx-json --file=sbom.json
-      cat sbom.json
   - name: attach-sbom
     image: quay.io/redhat-appstudio/cosign:v1.13.1
     workingDir: $(workspaces.source.path)
@@ -113,6 +112,8 @@ spec:
       - sbom
       - --sbom
       - sbom.json
+      - --attachment-tag-prefix
+      - unsigned-
       - --type
       - cyclonedx
       - $(params.IMAGE)
@@ -123,7 +124,7 @@ spec:
       set -x
       repo="$(echo -n $(params.IMAGE) | sed 's/:.*$//')"
       digest="$(cat $(results.IMAGE_DIGEST.path) | sed 's/:/-/')"
-      echo -n "${repo}:${digest}.sbom" | tee $(results.IMAGE_SBOM_URL.path)
+      echo -n "${repo}:unsigned-${digest}.sbom" | tee $(results.IMAGE_SBOM_URL.path)
   volumes:
   - name: varlibcontainers
     emptyDir: {}
