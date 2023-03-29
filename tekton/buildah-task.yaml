@@ -32,6 +32,9 @@ spec:
   - name: BUILDER_IMAGE
     description: The location of the buildah builder image.
     default: quay.io/buildah/stable:v1.23.3
+  - name: SKOPEO_IMAGE
+    description: The location of the skopeo image.
+    default: quay.io/skopeo/stable:latest
   - name: STORAGE_DRIVER
     description: Set buildah storage driver
     default: overlay
@@ -74,6 +77,8 @@ spec:
     description: Image repository where the built image would be pushed to
   - name: IMAGE_SBOM_URL
     description: Image repository where the unsigned SBOM image would be pushed to
+  - name: IMAGE_SBOM_FORMAT
+    type: string
   steps:
   - name: build
     image: $(params.BUILDER_IMAGE)
@@ -118,13 +123,15 @@ spec:
       - cyclonedx
       - $(params.IMAGE)
   - name: emit-sbom-result
-    image: $(params.BUILDER_IMAGE)
+    image: $(params.SKOPEO_IMAGE)
     workingDir: $(workspaces.source.path)
     script: |
       set -x
       repo="$(echo -n $(params.IMAGE) | sed 's/:.*$//')"
       digest="$(cat $(results.IMAGE_DIGEST.path) | sed 's/:/-/')"
-      echo -n "${repo}:unsigned-${digest}.sbom" | tee $(results.IMAGE_SBOM_URL.path)
+      sbom_digest="$(skopeo manifest-digest <(skopeo inspect --authfile /tekton/creds/.docker/config.json --raw "docker://${repo}:unsigned-${digest}.sbom"))"
+      echo -n "${repo}:unsigned-${digest}.sbom@${sbom_digest}" | tee $(results.IMAGE_SBOM_URL.path)
+      echo -n 'https://cyclonedx.org/schema' | tee $(results.IMAGE_SBOM_FORMAT.path)
   volumes:
   - name: varlibcontainers
     emptyDir: {}
