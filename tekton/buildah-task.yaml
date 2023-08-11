@@ -102,36 +102,6 @@ spec:
       capabilities:
         add:
         - SETFCAP
-  - name: make-sbom
-    image: quay.io/redhat-appstudio/syft:v0.47.0
-    workingDir: $(workspaces.source.path)
-    script: |
-      ref="$(params.IMAGE)@$(cat $(results.IMAGE_DIGEST.path))"
-      echo "binary image ref is ${ref}"
-      syft "${ref}" --output=cyclonedx-json --file=sbom.json
-  - name: attach-sbom
-    image: quay.io/redhat-appstudio/cosign:v1.13.1
-    workingDir: $(workspaces.source.path)
-    args:
-      - attach
-      - sbom
-      - --sbom
-      - sbom.json
-      - --attachment-tag-prefix
-      - unsigned-
-      - --type
-      - cyclonedx
-      - $(params.IMAGE)
-  - name: emit-sbom-result
-    image: $(params.SKOPEO_IMAGE)
-    workingDir: $(workspaces.source.path)
-    script: |
-      set -x
-      repo="$(echo -n $(params.IMAGE) | sed 's/:.*$//')"
-      digest="$(cat $(results.IMAGE_DIGEST.path) | sed 's/:/-/')"
-      sbom_digest="$(skopeo manifest-digest <(skopeo inspect --authfile /tekton/creds/.docker/config.json --raw "docker://${repo}:unsigned-${digest}.sbom"))"
-      echo -n "${repo}:unsigned-${digest}.sbom@${sbom_digest}" | tee $(results.IMAGE_SBOM_URL.path)
-      echo -n 'https://cyclonedx.org/schema' | tee $(results.IMAGE_SBOM_FORMAT.path)
   volumes:
   - name: varlibcontainers
     emptyDir: {}

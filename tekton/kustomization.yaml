@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
 - git-clone-task.yaml
 - buildah-task.yaml
+- sbom-task.yaml
 - simple-build-pipeline.yaml
 - build-pvc.yaml

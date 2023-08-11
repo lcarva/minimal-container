@@ -16,6 +16,9 @@ spec:
   - description: Reference of the image the pipeline will produce.
     name: output-image
     type: string
+  - description: OCI repo to temporarily store the SBOM blob.
+    name: sbom-repo
+    type: string
   results:
   - description: Reference of the image the pipeline will produce.
     name: IMAGE_URL
@@ -57,5 +60,18 @@ spec:
     workspaces:
     - name: source
       workspace: shared
+  - name: sbom
+    runAfter:
+    - image-build
+    taskRef:
+      kind: Task
+      name: sbom
+    params:
+    - name: IMAGE_URL
+      value: $(params.output-image)
+    - name: IMAGE_DIGEST
+      value: $(tasks.image-build.results.IMAGE_DIGEST)
+    - name: SBOM_REPO
+      value: $(params.sbom-repo)
   workspaces:
   - name: shared
