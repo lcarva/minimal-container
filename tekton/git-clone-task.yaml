@@ -1,6 +1,6 @@
 ---
 # ref: https://github.com/tektoncd/catalog/blob/main/task/git-clone/0.6/git-clone.yaml
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: Task
 metadata:
   name: git-clone

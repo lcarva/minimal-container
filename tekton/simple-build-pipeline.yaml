@@ -1,5 +1,5 @@
 ---
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
   annotations:
@@ -46,8 +46,14 @@ spec:
     runAfter:
     - git-clone
     taskRef:
-      name: trivy-scanner
-      bundle: gcr.io/tekton-releases/catalog/upstream/trivy-scanner:0.1
+      resolver: bundles
+      params:
+        - name: bundle
+          value: gcr.io/tekton-releases/catalog/upstream/trivy-scanner:0.1
+        - name: name
+          value: trivy-scanner
+        - name: kind
+          value: task
     params:
     - name: ARGS
       value:
@@ -61,12 +67,11 @@ spec:
     runAfter:
     - source-security-scan
     taskRef:
-      kind: ClusterTask
+      kind: Task
       name: buildah
     params:
     - name: IMAGE
       value: $(params.output-image)
-    # TODO: Maybe change this in the task def directly or via kustomize
     - name: STORAGE_DRIVER
       value: vfs
     workspaces:
@@ -74,8 +79,14 @@ spec:
       workspace: shared
   - name: image-security-scan
     taskRef:
-      name: trivy-scanner
-      bundle: gcr.io/tekton-releases/catalog/upstream/trivy-scanner@sha256:e4c2916f25ce2d42ec7016c3dc3392e527442c307f43aae3ea63f4622ee5cfe4
+      resolver: bundles
+      params:
+        - name: bundle
+          value: gcr.io/tekton-releases/catalog/upstream/trivy-scanner@sha256:e4c2916f25ce2d42ec7016c3dc3392e527442c307f43aae3ea63f4622ee5cfe4
+        - name: name
+          value: trivy-scanner
+        - name: kind
+          value: task
     params:
     - name: ARGS
       value:

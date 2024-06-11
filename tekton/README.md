@@ -12,17 +12,17 @@ It is assumed that oc is logged in to a cluster that already has Tekton Pipeline
 condition.
 
 ```bash
-oc new-project minimal-container
+oc new-project default
 
 # Install the required resources - requires kubeadmin for installing the ClusterTask
-oc -n minimal-container apply -k ./tekton
+oc -n default apply -k ./tekton
 
 # Run the pipeline. Change the parameters accordingly. The example below relies on the
 # integrated registry that is part of OpenShift.
-tkn -n minimal-container pipeline start simple-build \
+tkn -n default pipeline start simple-build \
   --param git-repo=https://github.com/lcarva/minimal-container \
   --param git-revision=main \
-  --param output-image=image-registry.openshift-image-registry.svc:5000/minimal-container/min:latest \
+  --param output-image=image-registry.openshift-image-registry.svc:5000/default/min:latest \
   --workspace name=shared,pvc,claimName="tekton-build" \
   --showlog
 ```
@@ -31,7 +31,7 @@ It is also possible to create a Tekton Pipeline via an Event Listener (require O
 
 ```
 # Set up an event listener.
-oc -n minimal-container apply -f ./tekton/build-event-listener.yaml
+oc -n default apply -f ./tekton/build-event-listener.yaml
 
 # Grab the event listener URL.
 EL_URL="$(oc get route build-event-listener -o json | jq '.spec.host' -r)"
